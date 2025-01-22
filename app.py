@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # Konfigurasi Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://pesanmakanan_sometimeit:a01685ce8ce92e7ea93cd55c9ffc90f4c5d00a74@ynazg.h.filess.io:3307/pesanmakanan_sometimeit'
+app.config['SQLALCHEMY_DATABASE_URI'] = mysql://root:mxGTzqdmGxGLFtvYrnGxVxHtsqyRlIWY@monorail.proxy.rlwy.net:19310/railway
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
