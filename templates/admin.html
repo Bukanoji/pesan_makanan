@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Dashboard Admin</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Daftar Pesanan</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Item</th>
+                <th>Jumlah</th>
+                <th>Total Harga</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.username }}</td>
+                <td>{{ order.item }}</td>
+                <td>{{ order.jumlah }}</td>
+                <td>Rp {{ "{:,.0f}".format(order.total_harga) }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    <a href="{{ url_for('update_status', order_id=order.id, status='Diproses') }}">Proses</a> |
+                    <a href="{{ url_for('update_status', order_id=order.id, status='Selesai') }}">Selesai</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
+
+    <footer>
+        <p>© 2025 Pesan Makanan Online</p>
+    </footer>
+</body>
+</html>

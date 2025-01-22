@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Keranjang Belanja</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/keranjang">Keranjang</a>
+            <a href="/login">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Daftar Pesanan</h2>
+        {% if cart %}
+            <table>
+                <tr>
+                    <th>Gambar</th>
+                    <th>Nama</th>
+                    <th>Harga</th>
+                    <th>Jumlah</th>
+                    <th>Aksi</th>
+                </tr>
+                {% for item in cart %}
+                <tr>
+                    <td><img src="{{ url_for('static', filename='images/' + item.gambar) }}" width="50"></td>
+                    <td>{{ item.nama }}</td>
+                    <td>Rp {{ "{:,.0f}".format(item.harga) }}</td>
+                    <td>{{ item.jumlah }}</td>
+                    <td>
+                        <a href="{{ url_for('hapus_dari_keranjang', id=item.id) }}">Hapus</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <h3>Total Harga: Rp {{ "{:,.0f}".format(total_harga) }}</h3>
+            <button onclick="alert('Fitur checkout belum tersedia!')">Checkout</button>
+        {% else %}
+            <p>Keranjang belanja kosong.</p>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>© 2025 Pesan Makanan Online</p>
+    </footer>
+</body>
+</html>
