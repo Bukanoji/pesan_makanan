@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
-# Konfigurasi Database
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:mxGTzqdmGxGLFtvYrnGxVxHtsqyRlIWY@monorail.proxy.rlwy.net:19310/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -16,7 +16,7 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-# Model User
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Buat database
+
 with app.app_context():
     db.create_all()
 
@@ -60,20 +60,16 @@ def menu():
 
 @app.route('/keranjang')
 def keranjang():
-    # Ambil daftar belanja dari session (defaultnya kosong)
     cart = session.get('cart', [])
     total_harga = sum(item['harga'] * item['jumlah'] for item in cart)
     return render_template('keranjang.html', cart=cart, total_harga=total_harga)
 
 @app.route('/tambah_ke_keranjang/<int:id>')
 def tambah_ke_keranjang(id):
-    # Cari item berdasarkan ID
     item = next((m for m in daftar_menu if m["id"] == id), None)
     if item:
-        # Ambil data keranjang dari session
         cart = session.get('cart', [])
 
-        # Cek apakah item sudah ada di keranjang
         for makanan in cart:
             if makanan["id"] == id:
                 makanan["jumlah"] += 1
@@ -81,7 +77,6 @@ def tambah_ke_keranjang(id):
         else:
             cart.append({"id": item["id"], "nama": item["nama"], "harga": item["harga"], "gambar": item["gambar"], "jumlah": 1})
 
-        # Simpan kembali ke session
         session['cart'] = cart
     return redirect(url_for('keranjang'))
 
@@ -112,13 +107,11 @@ def register():
         password = request.form['password']
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        # Cek apakah username sudah ada
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash('Username sudah digunakan, coba yang lain!', 'danger')
             return redirect(url_for('register'))
 
-        # Simpan user ke database
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -138,10 +131,9 @@ def login():
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             next_page = request.args.get('next')
-            if next_page:  # Redirect ke halaman yang diminta sebelumnya
+            if next_page:  
                 return redirect(next_page)
 
-            # Jika tidak ada, redirect ke halaman default
             if user.username == 'admin':
                 return redirect(url_for('admin_dashboard'))
             return redirect(url_for('home'))
